@@ -54,6 +54,22 @@ Parameters:
     Type: String
     Description: "(Examples include SPIGOT, BUKKIT, TUINITY, etc) Refer to tag descriptions available here: https://github.com/itzg/docker-minecraft-server)"
 
+  ForgeInstallerTag:
+    Type: String
+    Description: "(If Type=FORGE) The name of your .JAR-File to execute."
+  
+  MaxMemoryTag:
+    Type: String
+    Description: "The maximum amount of RAM to run the Server on. Eg: 7500M"
+  
+  ModpackTag:
+    Type: String
+    Description: "(If Type=FORGE/BUKKIT/SPIGOT) Url to a zip archive containing a modpack like hexxit."
+  
+  ModsTag:
+    Type: String
+    Description: "A list of urls to specific mods"
+
   AdminPlayerNames:
     Type: String
     Description: Op/Administrator Players

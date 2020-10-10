@@ -86,6 +86,10 @@ Metadata:
           default: Optional Server Settings
         Parameters:
         - MinecraftTypeTag
+        - MaxMemory
+        - ForgeInstaller
+        - Modpack
+        - Mods
         - AdminPlayerNames
         - Difficulty
         - Whitelist
@@ -108,8 +112,14 @@ Metadata:
         default: "Maximum spot price per hour? Leave blank to disable spot pricing."
       MinecraftImageTag:
         default: "Which version of Minecraft do you want to launch?"
-      MinecraftTypeTag:
-        default: "Which type of Minecraft do you want to launch?"
+      MaxMemory:
+        default: "With how much max ram do you want to launch?"
+      ForgeInstaller:
+        default: "(IF TYPE=FORGE) Whats the filename of the Forge .JAR you want to launch?"
+      Modpack:
+        default: "The URL of a 'mod pack' to download and install into mods for Forge or plugins for Bukkit/Spigot. The referenced URL must be a zip file with one or more jar files at the top level of the zip archive. Make sure the jars are compatible with the particular TYPE of server you are running"
+      Mods:
+        default: "A comma delimited list (no spaces) of urls to jar files."
       AdminPlayerNames:
         default: "A comma delimited list (no spaces) of player names to be admins"
       Difficulty:
@@ -134,6 +144,10 @@ Conditions:
   IpAddressProvided: !Not [ !Equals [ !Ref YourIp, '' ] ]
   DnsConfigEnabled: !And [ !Not [ !Equals [ !Ref HostedZoneId, '' ] ], !Not [ !Equals [ !Ref RecordName, '' ] ] ]
   SpotPriceProvided: !Not [ !Equals [ !Ref SpotPrice, '' ] ]
+  MaxMemoryProvided: !Not [ !Equals [ !Ref MaxMemory, '' ] ]
+  ForgeInstallerProvided: !Not [ !Equals [ !Ref ForgeInstaller, '' ] ]
+  ModpackProvided: !Not [ !Equals [ !Ref Modpack, '' ] ]
+  ModsProvided: !Not [ !Equals [ !Ref Mods, '' ] ]
 
 
 Mappings:
@@ -359,7 +373,7 @@ Resources:
         Name: minecraft
       ContainerDefinitions:      
         - Name: minecraft
-          MemoryReservation: 1024
+          MemoryReservation: 2048
           Image: !Sub "itzg/minecraft-server:${MinecraftImageTag}"
           PortMappings:
           - ContainerPort: 25565
@@ -391,6 +405,26 @@ Resources:
               - WhitelistProvided
               - Name: "WHITELIST"
                 Value: !Sub "${Whitelist}"
+              - !Ref 'AWS::NoValue'
+            - !If
+              - MaxMemoryProvided
+              - Name: "MAX_MEMORY"
+                Value: !Sub "${MaxMemory}"
+              - !Ref 'AWS::NoValue'
+            - !If
+              - ForgeInstallerProvided
+              - Name: "FORGE_INSTALLER"
+                Value: !Sub "${ForgeInstaller}"
+              - !Ref 'AWS::NoValue'
+            - !If
+              - ModpackProvided
+              - Name: "MODPACK"
+                Value: !Sub "${Modpack}"
+              - !Ref 'AWS::NoValue'
+            - !If
+              - ModsProvided
+              - Name: "MODS"
+                Value: !Sub "${Mods}"
               - !Ref 'AWS::NoValue'
 
   # ====================================================
